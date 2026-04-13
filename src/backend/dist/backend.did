@@ -1,0 +1,150 @@
+type _ImmutableObjectStorageRefillResult = 
+ record {
+   success: opt bool;
+   topped_up_amount: opt nat;
+ };
+type _ImmutableObjectStorageRefillInformation = record {
+                                                  proposed_top_up_amount:
+                                                   opt nat;};
+type _ImmutableObjectStorageCreateCertificateResult = 
+ record {
+   blob_hash: text;
+   method: text;
+ };
+type VideoId = nat;
+type VideoFilter = 
+ record {
+   collectionId: opt CollectionId;
+   dateFrom: opt Timestamp;
+   dateTo: opt Timestamp;
+   searchTerm: opt text;
+   sortField: SortField;
+   sortOrder: SortOrder;
+   tags: opt vec text;
+ };
+type Video = 
+ record {
+   "blob": ExternalBlob;
+   collectionId: opt CollectionId;
+   createdAt: Timestamp;
+   description: text;
+   fileSize: nat;
+   filename: text;
+   id: VideoId;
+   owner: UserId;
+   tags: vec text;
+   thumbnail: opt ExternalBlob;
+   title: text;
+ };
+type UserRole = 
+ variant {
+   admin;
+   guest;
+   user;
+ };
+type UserId = principal;
+type UpdateVideoRequest = 
+ record {
+   collectionId: opt CollectionId;
+   description: text;
+   id: VideoId;
+   tags: opt vec text;
+   title: text;
+ };
+type Timestamp = int;
+type SortOrder = 
+ variant {
+   asc;
+   desc;
+ };
+type SortField = 
+ variant {
+   dateAdded;
+   fileSize;
+   title;
+ };
+type ShareScope = 
+ variant {
+   collection: CollectionId;
+   library;
+   tag: text;
+ };
+type ShareLinkId = text;
+type ShareLink = 
+ record {
+   createdAt: Timestamp;
+   id: ShareLinkId;
+   owner: UserId;
+   scope: ShareScope;
+   token: text;
+ };
+type ExternalBlob = blob;
+type DeleteCollectionStrategy = 
+ variant {
+   deleteVideos;
+   moveToCollection: CollectionId;
+   moveToUncategorized;
+ };
+type CreateShareLinkRequest = record {scope: ShareScope;};
+type CollectionId = nat;
+type Collection = 
+ record {
+   createdAt: Timestamp;
+   id: CollectionId;
+   owner: UserId;
+   title: text;
+ };
+type BatchVideoActionRequest = 
+ record {
+   action: BatchAction;
+   videoIds: vec VideoId;
+ };
+type BatchAction = 
+ variant {
+   addTags: vec text;
+   delete;
+   moveToCollection: opt CollectionId;
+   removeTags: vec text;
+ };
+type AddVideoRequest = 
+ record {
+   "blob": ExternalBlob;
+   collectionId: opt CollectionId;
+   description: text;
+   fileSize: nat;
+   filename: text;
+   tags: opt vec text;
+   thumbnail: opt ExternalBlob;
+   title: text;
+ };
+service : {
+  _immutableObjectStorageBlobsAreLive: (hashes: vec blob) -> (vec bool) query;
+  _immutableObjectStorageBlobsToDelete: () -> (vec blob) query;
+  _immutableObjectStorageConfirmBlobDeletion: (blobs: vec blob) -> ();
+  _immutableObjectStorageCreateCertificate: (blobHash: text) ->
+   (_ImmutableObjectStorageCreateCertificateResult);
+  _immutableObjectStorageRefillCashier: (refillInformation:
+   opt _ImmutableObjectStorageRefillInformation) ->
+   (_ImmutableObjectStorageRefillResult);
+  _immutableObjectStorageUpdateGatewayPrincipals: () -> ();
+  _initializeAccessControl: () -> ();
+  addVideo: (req: AddVideoRequest) -> (Video);
+  assignCallerUserRole: (user: principal, role: UserRole) -> ();
+  batchVideoAction: (req: BatchVideoActionRequest) -> (nat);
+  createCollection: (title: text) -> (Collection);
+  createShareLink: (req: CreateShareLinkRequest) -> (ShareLink);
+  deleteCollection: (id: CollectionId, strategy: DeleteCollectionStrategy) ->
+   (bool);
+  deleteShareLink: (id: ShareLinkId) -> (bool);
+  deleteVideo: (id: VideoId) -> (bool);
+  getCallerUserRole: () -> (UserRole) query;
+  getSharedVideos: (token: text) -> (vec Video) query;
+  getVideo: (id: VideoId) -> (opt Video) query;
+  isCallerAdmin: () -> (bool) query;
+  listCollections: () -> (vec Collection) query;
+  listShareLinks: () -> (vec ShareLink) query;
+  listVideos: (filter: VideoFilter) -> (vec Video) query;
+  moveVideo: (videoId: VideoId, collectionId: opt CollectionId) -> (bool);
+  renameCollection: (id: CollectionId, newTitle: text) -> (bool);
+  updateVideo: (req: UpdateVideoRequest) -> (bool);
+}

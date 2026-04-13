@@ -1,0 +1,22 @@
+{
+  "overview": "VidVault is a personal video library app where you can upload, organize, and watch your downloaded videos. Organize videos into collections, tag them for cross-collection search, batch-select multiple videos for bulk actions, and share your library with others via public links.",
+  "features": [
+    "Upload and manage personal videos with titles, descriptions, and thumbnails",
+    "Organize videos into custom collections",
+    "Tag videos for cross-collection search and filtering",
+    "Batch select multiple videos to tag, move, or delete in bulk",
+    "Generate shareable links scoped to your full library, a collection, or a tag",
+    "Full-featured video player with Internet Identity authentication"
+  ],
+  "category": "media-entertainment",
+  "tags": [
+    "video",
+    "library",
+    "personal",
+    "collections",
+    "tags",
+    "sharing",
+    "batch-actions"
+  ],
+  "last_updated": "2026-04-13T08:24:14.445Z"
+}

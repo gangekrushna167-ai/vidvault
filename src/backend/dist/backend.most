@@ -1,0 +1,88 @@
+// Version: 1.0.0
+type CollectionId__2867479 = CollectionId__634139010;
+type CollectionId__634139010 = Nat;
+type CollectionId__674876002 = CollectionId__634139010;
+type CollectionInternal__523338213 =
+  {
+    createdAt : Timestamp__751829590;
+    id : CollectionId__674876002;
+    owner : UserId__424100232;
+    var title : Text
+  };
+type Data__791452850<K, V> =
+  {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type ExternalBlob__246066408 = Blob;
+type Internal__8484328<K, V> =
+  {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
+type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type Map__158565046<K, V> = Map__297112838<K, V>;
+type Map__297112838<K, V> =
+  {var root : Node__46230540<K, V>; var size : Nat__490723111};
+type Map__605269027<K, V> = Map__158565046<K, V>;
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type Node__46230540<K, V> =
+  {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type ShareLinkId__578605946 = Text;
+type ShareLink__684122290 =
+  {
+    createdAt : Timestamp__301639476;
+    id : ShareLinkId__578605946;
+    owner : UserId__158757552;
+    scope : ShareScope__430980399;
+    token : Text
+  };
+type ShareScope__430980399 =
+  {#collection : CollectionId__634139010; #library; #tag : Text};
+type Timestamp__301639476 = Int;
+type Timestamp__751829590 = Timestamp__301639476;
+type Timestamp__893823798 = Timestamp__301639476;
+type UserId__158757552 = Principal;
+type UserId__424100232 = UserId__158757552;
+type UserId__96966654 = UserId__158757552;
+type UserRole__1054455867 = {#admin; #guest; #user};
+type VideoId__311199452 = VideoId__498652803;
+type VideoId__498652803 = Nat;
+type VideoInternal__406145926 =
+  {
+    blob : ExternalBlob__246066408;
+    var collectionId : ?CollectionId__2867479;
+    createdAt : Timestamp__893823798;
+    var description : Text;
+    var fileSize : Nat;
+    filename : Text;
+    id : VideoId__311199452;
+    owner : UserId__96966654;
+    var tags : [Text];
+    thumbnail : ?ExternalBlob__246066408;
+    var title : Text
+  };
+actor {
+  stable accessControlState :
+    {
+      var adminAssigned : Bool;
+      userRoles : Map__605269027<Principal, UserRole__1054455867>
+    };
+  stable collectionStore :
+    {
+      var root :
+        Node__46230540<CollectionId__634139010, CollectionInternal__523338213>;
+      var size : Nat__490723111
+    };
+  stable nextCollectionId : {var value : Nat};
+  stable nextCollectionIdValue : Nat;
+  stable nextShareLinkId : {var value : Nat};
+  stable nextShareLinkIdValue : Nat;
+  stable nextVideoId : {var value : Nat};
+  stable nextVideoIdValue : Nat;
+  stable shareLinkStore :
+    {
+      var root : Node__46230540<ShareLinkId__578605946, ShareLink__684122290>;
+      var size : Nat__490723111
+    };
+  stable videoStore :
+    {
+      var root : Node__46230540<VideoId__498652803, VideoInternal__406145926>;
+      var size : Nat__490723111
+    }
+};
